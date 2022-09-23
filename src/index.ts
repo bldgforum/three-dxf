@@ -4,7 +4,11 @@ import { DXFPainter } from './dxf-painter';
 import { IDxf } from 'dxf-parser';
 // Font and FontLoader must be introduced after version 133
 // https://github.com/mrdoob/three.js/pull/22560
-// import { Font, FontLoader} from 'three/examples/jsm/loaders/FontLoader'
+// @ts-ignore
+import { Font } from 'three/examples/jsm/loaders/FontLoader'
+
+export * from './three-dxf-loader'
+export * from './dxf-painter'
 
 /**
  *
@@ -40,7 +44,7 @@ export class Viewer {
     parent: HTMLElement,
     width: number,
     height: number,
-    font: THREE.Font
+    font: Font
   ) {
     // create DXF painter
     this.painter = new DXFPainter(font);
@@ -167,7 +171,7 @@ export class Viewer {
     document.documentElement.appendChild(iframe);
     iframe.contentDocument;
     const doc = iframe.contentWindow?.document || iframe.contentDocument;
-    let display = null;
+    let display = '';
     if (doc) {
       // IE support
       doc.write();
@@ -214,12 +218,12 @@ export class Viewer {
   }
 
   private onCanvasClick() {
-    const arr = [];
-    for (let i = 0; i < this.intersects.length; i++) {
-      const intersect = this.intersects[i].object;
-      arr.push(intersect);
-    }
-    console.log(arr);
+    // const arr = [];
+    // for (let i = 0; i < this.intersects.length; i++) {
+    //   const intersect = this.intersects[i].object;
+    //   arr.push(intersect);
+    // }
+    // console.log(arr);
   }
 
   private onPointerMove(event: PointerEvent) {

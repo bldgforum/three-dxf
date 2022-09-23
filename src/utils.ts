@@ -64,7 +64,7 @@ export const getBulgeCurvePoints = (
   const startAngle = angle2(center, p0);
   const thetaAngle = angle / segments;
 
-  const vertices = [];
+  const vertices: THREE.Vector3[] = [];
 
   vertices.push(new THREE.Vector3(p0.x, p0.y, 0));
 
@@ -197,7 +197,7 @@ export const bSpline = (
   }
 
   // convert back to cartesian and return
-  const result = [];
+  const result: number[] = [];
   for (let i = 0; i < d; i++) {
     result[i] = round10(v[s][i] / v[s][d], -9);
   }

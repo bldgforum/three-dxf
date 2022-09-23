@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ES6",
     "useDefineForClassFields": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -9,6 +9,7 @@
     "sourceMap": false,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
@@ -16,12 +17,12 @@
     "allowSyntheticDefaultImports": true,
     "strictFunctionTypes": false,
     "declaration": true,
-    "lib": ["esnext", "dom"],
+    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
     "allowJs": true,
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["node_modules", "dist", "**/*.js"]

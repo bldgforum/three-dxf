@@ -2,6 +2,10 @@ import * as THREE from 'three';
 import { getBulgeCurvePoints, bSpline } from './utils';
 import { Text } from 'troika-three-text';
 import { parseDxfMTextContent, DxfMTextContentElement } from '@dxfom/mtext';
+// @ts-ignore
+import { Font } from 'three/examples/jsm/loaders/FontLoader'
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
+
 import {
   IDxf,
   IEntity,
@@ -81,10 +85,26 @@ export function isSPLINE(entity: IEntity): entity is ISplineEntity {
 }
 
 export class DXFPainter {
-  font: THREE.Font;
-  constructor(font: THREE.Font) {
+  font: Font;
+  constructor(font: Font) {
     this.font = font;
   }
+
+  drawArray(entities: IEntity[], data: IDxf) {
+    this.createLineTypeShaders(data)
+    
+    const objs: THREE.Object3D[] = []
+
+    for (const e of entities) {
+      const obj = this.drawEntity(e, data)
+      if (obj) {
+        objs.push(obj)
+      }
+    }
+
+    return objs
+  }
+
   draw(entity: IEntity, data: IDxf) {
     this.createLineTypeShaders(data);
     return this.drawEntity(entity, data);
@@ -202,7 +222,7 @@ export class DXFPainter {
       textHeight: entity.height,
     };
 
-    const text = [];
+    const text: string[] = [];
     for (const item of textAndControlChars) {
       if (typeof item === 'string') {
         if (item.startsWith('pxq') && item.endsWith(';')) {
@@ -245,10 +265,10 @@ export class DXFPainter {
     color: number
   ) {
     if (!text) return null;
-
+    
     const textEnt = new Text();
-    textEnt.text = text.replaceAll('\\P', '\n').replaceAll('\\X', '\n');
-
+    textEnt.text = text.replace(/\\P/g, '\n').replace(/\\X/g, '\n');
+    
     textEnt.font = this.font;
     textEnt.fontSize = style.textHeight;
     textEnt.maxWidth = entity.width;
@@ -372,7 +392,7 @@ export class DXFPainter {
     interpolationsPerSplineSegment: number,
     weights?: number[]
   ) {
-    const polyline = [];
+    const polyline: THREE.Vector2[] = [];
     let controlPointsForLib: number[][] = [];
     if (controlPoints) {
       controlPointsForLib = controlPoints.map(function (p: IPoint) {
@@ -407,7 +427,7 @@ export class DXFPainter {
   }
 
   private drawLine(entity: ILINE, data: IDxf) {
-    const points = [];
+    const points: THREE.Vector3[] = [];
     const color = this.getColor(entity, data);
     let material, lineType;
 
@@ -533,8 +553,8 @@ export class DXFPainter {
         'Text is not supported without a Three.js font loaded with THREE.FontLoader! Load a font of your choice and pass this into the constructor. See the sample for this repository or Three.js examples at http://threejs.org/examples/?q=text#webgl_geometry_text for more details.'
       );
     }
-
-    const geometry = new THREE.TextGeometry(entity.text, {
+    
+    const geometry = new TextGeometry(entity.text, {
       font: this.font,
       height: 0,
       size: entity.textHeight || 12,
